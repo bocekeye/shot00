@@ -32,4 +32,7 @@ private:
 	Player m_player;
 	// ショット
 	Shot m_shot[kShotMax];
+
+	//ショットの発射間隔
+	int m_shotInterval;
 };

@@ -1,10 +1,17 @@
 #include "DxLib.h"
 #include "SceneMain.h"
 
+namespace
+{
+	//ショットの発射間隔
+	constexpr int kShotInterval = 16;
+}
+
 SceneMain::SceneMain()
 {
 	m_hPlayerGraphic = -1;
 	m_hShotGraphic = -1;
+	m_shotInterval = 0;
 }
 SceneMain::~SceneMain()
 {
@@ -24,6 +31,7 @@ void SceneMain::init()
 	{
 		shot.setHandle(m_hShotGraphic);
 	}
+	m_shotInterval = 0;
 }
 
 // 終了処理
@@ -42,10 +50,23 @@ void SceneMain::update()
 		shot.update();
 	}
 
+	m_shotInterval--;
+	if (m_shotInterval < 0) m_shotInterval = 0;
+	
+
 	// キー入力処理
 	int padState = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	if (padState & PAD_INPUT_1)
+	if( (padState & PAD_INPUT_1) && (m_shotInterval <= 0))
 	{
+		for (auto& shot : m_shot)
+		{
+			if (shot.isExist()) continue;
+
+			shot.start(m_player.getPos());
+			m_shotInterval = kShotInterval;
+			break;
+			
+		}
 	}
 }
 
@@ -58,4 +79,12 @@ void SceneMain::draw()
 	{
 		shot.draw();
 	}
+	//存在している弾の数の表示
+	int shotNum = 0;
+
+	for (auto& shot : m_shot)
+	{
+		shot.draw(); shotNum++;
+	}
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "弾の数 : %d", shotNum);
 }
