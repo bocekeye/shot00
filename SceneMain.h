@@ -1,7 +1,9 @@
 #pragma once
 
 #include "player.h"
-#include "shot.h"
+#include "ShotFall.h"
+#include "ShotBound.h"
+#include "ShotNormal.h"
 
 class SceneMain
 {
@@ -20,7 +22,9 @@ public:
 	void draw();
 	
 	//弾の生成
-	bool createShot(Vec2 pos);
+	bool createShotNormal(Vec2 pos);
+	bool createShotFall(Vec2 pos);
+	bool createShotBound(Vec2 pos);
 private:
 	// ショットの最大数
 	static constexpr int kShotMax = 64;
@@ -33,8 +37,9 @@ private:
 	// プレイヤー
 	Player m_player;
 	// ショット
-	Shot m_shot[kShotMax];
+//	ShotBase* m_pShot[kShotMax];
 
-	//ショットの発射間隔
-	int m_shotInterval;
+    ShotNormal* m_pShotNormal[kShotMax];
+	ShotFall* m_pShotFall[kShotMax];
+    ShotBound* m_pShotBound[kShotMax];
 };
