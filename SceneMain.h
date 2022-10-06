@@ -1,10 +1,7 @@
 #pragma once
 
 #include "player.h"
-#include "ShotFall.h"
-#include "ShotBound.h"
-#include "ShotNormal.h"
-
+#include "ShotBase.h"
 class SceneMain
 {
 public:
@@ -37,9 +34,6 @@ private:
 	// プレイヤー
 	Player m_player;
 	// ショット
-//	ShotBase* m_pShot[kShotMax];
+	ShotBase* m_pShot[kShotMax];
 
-    ShotNormal* m_pShotNormal[kShotMax];
-	ShotFall* m_pShotFall[kShotMax];
-    ShotBound* m_pShotBound[kShotMax];
 };
