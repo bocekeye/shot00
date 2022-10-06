@@ -32,10 +32,6 @@ void SceneMain::init()
 	m_player.init();
 	m_player.setMain(this);
 
-	for (auto& pShot : m_pShot)
-	{
-		pShot = nullptr;
-	}
 }
 
 // èIóπèàóù
@@ -44,7 +40,7 @@ void SceneMain::end()
 	DeleteGraph(m_hPlayerGraphic);
 	DeleteGraph(m_hShotGraphic);
 
-	for (auto& pShot : m_pShot)
+	for (auto& pShot : m_pShotVt)
 	{
 		if (!pShot) continue;
 		delete pShot;
@@ -57,16 +53,29 @@ void SceneMain::update()
 {
 	m_player.update();
 	
-	for (auto& pShot : m_pShot)
+	std::vector<ShotBase*>::iterator it = m_pShotVt.begin();
+	while (it != m_pShotVt.end())
 	{
-		if (!pShot) continue;
+		auto& pShot = (*it);
+
+		if (!pShot)
+		{
+			it++;
+			continue;
+		}
 		pShot->update();
 		if (!pShot->isExist())
 		{
 			delete pShot;
 			pShot = nullptr;
+
+			//vectorÇÃóvëfçÌèú
+			it = m_pShotVt.erase(it); //eraseÇÕçÌèúÇµÇΩéüÇÃóvëfÇï‘ÇµÇƒÇ≠ÇÍÇÈ
+			continue;
 		}
+		it++;
 	}
+
 }
 
 // ñàÉtÉåÅ[ÉÄÇÃï`âÊ
@@ -74,97 +83,43 @@ void SceneMain::draw()
 {
 	m_player.draw();
 
-	for (auto& pShot : m_pShot)
+	for (auto& pShot : m_pShotVt)
 	{
 		if (!pShot) continue;
 		pShot->draw();
 	}
 
 	//ë∂ç›ÇµÇƒÇ¢ÇÈíeÇÃêîÇÃï\é¶
-	int shotNum = 0;
-	for (auto& pShot : m_pShot)
-	{
-		if (!pShot) continue;
-		if (pShot->isExist()) shotNum++;
-	}
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "íeÇÃêî:%d", shotNum);
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "íeÇÃêî:%d", m_pShotVt.size());
 }
 
 bool SceneMain::createShotNormal(Vec2 pos)
 {
-	for (auto& pShot : m_pShot)
-	{
-		if (pShot) continue;
+	ShotNormal* pShot = new ShotNormal;
+	pShot->setHandle(m_hShotGraphic);
+	pShot->start(pos);
+	m_pShotVt.push_back(pShot);
 
-		pShot = new ShotNormal;
-		pShot->setHandle(m_hShotGraphic);
-		pShot->start(pos);
-		return true;
+	return true;
 
-	}
-	return false;
 }
+
 bool SceneMain::createShotFall(Vec2 pos)
 {
 
-	for (auto& pShot : m_pShot)
-	{
-		if (pShot) continue;
+	ShotFall* pShot = new ShotFall;
+	pShot->setHandle(m_hShotGraphic);
+	pShot->start(pos);
+	m_pShotVt.push_back(pShot);
 
-		pShot = new ShotFall;
-		pShot->setHandle(m_hShotGraphic);
-		pShot->start(pos);
-		return true;
-
-	}
-	return false;
+	return true;
 }
 bool SceneMain::createShotBound(Vec2 pos)
 {
+	ShotBound* pShot = new ShotBound;
+	pShot->setHandle(m_hShotGraphic);
+	pShot->start(pos);
+	m_pShotVt.push_back(pShot);
 
-	for (auto& pShot : m_pShot)
-	{
-		if (pShot) continue;
-
-		pShot = new ShotBound;
-		pShot->setHandle(m_hShotGraphic);
-		pShot->start(pos);
-		return true;
-
-	}
-	return false;
+	return true;
 }
-#if false
-	for (auto& shot : m_pShotNormal)
-	{
-		if (shot.isExist()) continue;
-
-		shot.start(m_player.getPos());
-		return true;
-	}
-
-	return false;
-}
-bool SceneMain::createShotFall(Vec2 pos)
-{
-	for (auto& shot : m_pShotFall)
-	{
-		if (shot.isExist()) continue;
-
-		shot.start(m_player.getPos());
-		return true;
-	}
-	return false;
-}
-bool SceneMain::createShotBound(Vec2 pos)
-{
-	for (auto& shot : m_pShotBound)
-	{
-		if (shot.isExist()) continue;
-
-		shot.start(m_player.getPos());
-		return true;
-	}
-	return false;
-}
-#endif

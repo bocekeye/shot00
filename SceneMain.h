@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "player.h"
 #include "ShotBase.h"
 class SceneMain
@@ -22,9 +23,6 @@ public:
 	bool createShotNormal(Vec2 pos);
 	bool createShotFall(Vec2 pos);
 	bool createShotBound(Vec2 pos);
-private:
-	// ショットの最大数
-	static constexpr int kShotMax = 64;
 
 private:
 
@@ -34,6 +32,7 @@ private:
 	// プレイヤー
 	Player m_player;
 	// ショット
-	ShotBase* m_pShot[kShotMax];
+	 std::vector<ShotBase*> m_pShotVt;
+//	ShotBase* m_pShot[kShotMax];
 
 };

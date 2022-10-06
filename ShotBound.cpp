@@ -4,7 +4,7 @@
 
 namespace
 {
-	constexpr float kShotSpeed = 8.0f;
+	constexpr float kShotSpeed = 0.1f;
 
 	//’µ‚Ë•Ô‚è‰ñ”
 	constexpr int kBoundMax = 3;
